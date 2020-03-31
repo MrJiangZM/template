@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2020/3/30 11:27 上午
  */
 @Slf4j
+//@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @SpringBootApplication
 public class Application {
 

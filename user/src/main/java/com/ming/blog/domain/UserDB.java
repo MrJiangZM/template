@@ -18,7 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-public class User implements Serializable {
+public class UserDB implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

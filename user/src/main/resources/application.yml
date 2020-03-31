@@ -3,9 +3,23 @@ server:
   servlet:
     context-path: /permission
 
+jwt:
+  config:
+    secret: templage20200331
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/template?characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&useSSL=false
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+#    hibernate:
+#      ddl-auto: update
+
+  security:
+    user:
+      name: admin
+      password: admin

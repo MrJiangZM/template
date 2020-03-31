@@ -1,7 +1,8 @@
 package com.ming.blog.dao;
 
-import com.ming.blog.domain.User;
+import com.ming.blog.domain.UserDB;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,5 +10,10 @@ import org.springframework.stereotype.Repository;
  * @date 2020/3/30 11:53 上午
  */
 @Repository
-public interface UserDao extends JpaRepository<User, Integer> {
+public interface UserDao extends JpaRepository<UserDB, Integer> {
+
+    @Query(nativeQuery = true,
+            value = "select * from user where username = ?")
+    UserDB findByUsername(String username);
+
 }
