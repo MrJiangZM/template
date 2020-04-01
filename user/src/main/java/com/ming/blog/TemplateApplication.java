@@ -11,10 +11,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 //@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @SpringBootApplication
-public class Application {
+public class TemplateApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(TemplateApplication.class, args);
         log.info("app start success");
     }
 

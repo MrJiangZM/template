@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
-public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     private JwtUtil jwtUtil;

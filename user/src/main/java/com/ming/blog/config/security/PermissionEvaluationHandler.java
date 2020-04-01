@@ -2,7 +2,6 @@ package com.ming.blog.config.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,11 +10,11 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service("permissionEvaluator")
-public class PermissionEvaluation {
+public class PermissionEvaluationHandler {
 
     public Boolean check(Authentication authentication) {
-        System.out.println("进入了自定义的匹配器" + authentication);
-        return false;
+        System.out.println("进入了自定义的权限匹配器" + authentication);
+        return true;
     }
 
 }

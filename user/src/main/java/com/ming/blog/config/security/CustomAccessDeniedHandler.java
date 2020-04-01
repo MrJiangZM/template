@@ -18,7 +18,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 
-public class AccessDeniedAuthenticationHandler implements AccessDeniedHandler {
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest httpServletRequest,
@@ -27,7 +27,6 @@ public class AccessDeniedAuthenticationHandler implements AccessDeniedHandler {
         log.warn("没有权限");
         httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-//        httpServletResponse.getWriter().write(objectMapper.writeValueAsString(e.getMessage()));
 
     }
 
