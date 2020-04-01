@@ -3,6 +3,7 @@ package com.ming.blog.config.security;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -11,6 +12,7 @@ import java.util.Collection;
  * @author Jiang Zaiming
  * @date 2020/4/1 2:07 下午
  */
+@Component
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     /**

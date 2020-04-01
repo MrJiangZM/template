@@ -26,14 +26,14 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
     @Autowired
     private DBUserDetailService dbUserDetailService;
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        FilterChain chain,
-                                        Authentication authentication)
-            throws IOException, ServletException {
-
-    }
+//    @Override
+//    public void onAuthenticationSuccess(HttpServletRequest request,
+//                                        HttpServletResponse response,
+//                                        FilterChain chain,
+//                                        Authentication authentication)
+//            throws IOException, ServletException {
+//        System.out.println("============");
+//    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,

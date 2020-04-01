@@ -1,5 +1,9 @@
 package com.ming.blog.config.security;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ming.blog.config.common.CommonException;
+import com.ming.blog.config.common.ResponseStatusEnum;
+import com.ming.blog.domain.UserDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,7 +13,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 
 /**
@@ -18,7 +25,7 @@ import java.util.Collection;
  * @date 2018/9/5
  */
 //@Deprecated
-//@Component
+@Component
 public class MyAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
@@ -45,7 +52,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         }
 
         // 这里我们还要判断密码是否正确，这里我们的密码使用BCryptPasswordEncoder进行加密的
-        if (!new BCryptPasswordEncoder().matches(password, userInfo.getPassword())) {
+        if (!userInfo.getPassword().equals(password)) {
             throw new BadCredentialsException("密码不正确");
         }
         // 这里还可以加一些其他信息的判断，比如用户账号已停用等判断。

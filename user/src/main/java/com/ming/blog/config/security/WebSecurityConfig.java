@@ -24,8 +24,6 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private DBUserDetailService dbUserDetailService;
-    @Autowired
     private CustomLoginFailureHandler loginFailureHandler;
     @Autowired
     private CustomLoginSuccessHandler loginSuccessHandler;
@@ -34,15 +32,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomLogoutSuccessHandler logoutSuccessHandler;
     /***注入我们自己的登录逻辑验证器AuthenticationProvider*/
-//    @Autowired
-//    private AuthenticationProvider authenticationProvider;
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
 //    @Autowired
     private AuthenticationManager authenticationManager;
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        //这里可启用我们自己的登陆验证逻辑
-//        auth.authenticationProvider(authenticationProvider);
+//    @Bean
+//    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
+//        DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
+//        handler.setPermissionEvaluator(new CustomPermissionEvaluator());
+//        return handler;
 //    }
 
     /**
@@ -76,7 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
 //        auth.userDetailsService(dbUserDetailService);
-//        auth.authenticationProvider(authenticationProvider);
+        auth.authenticationProvider(authenticationProvider);
         /**
          * 在内存在设置用户名密码 进行匹配
          * */
@@ -97,15 +96,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http    // 对所有路径都进行拦截
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/login/self").permitAll()
+                .antMatchers("/login/app").permitAll()
                 .antMatchers("/testNone").permitAll()
 //                .anyRequest().access("@permissionEvaluator.check(authentication)")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 //loginProcessingUrl用于指定前后端分离的时候调用后台登录接口的名称
-                .loginProcessingUrl("/login/test")
+                .loginProcessingUrl("/login/app")
                 .failureHandler(loginFailureHandler)
                 .successHandler(loginSuccessHandler)
                 .and()
@@ -127,9 +125,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public MyLoginAuthenticationFilter customAuthenticationFilter() throws Exception {
         MyLoginAuthenticationFilter filter = new MyLoginAuthenticationFilter();
-//        filter.setAuthenticationSuccessHandler(new LoginFailureHandler());
-//        filter.setAuthenticationFailureHandler(loginSuccessHandler);
-        filter.setFilterProcessesUrl("/login/self");
+        filter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        filter.setAuthenticationFailureHandler(loginFailureHandler);
+        filter.setFilterProcessesUrl("/login/app");
 
         //这句很关键，重用WebSecurityConfigurerAdapter配置的AuthenticationManager，不然要自己组装AuthenticationManager
         filter.setAuthenticationManager(authenticationManagerBean());
