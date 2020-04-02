@@ -17,6 +17,7 @@ public enum ResponseStatusEnum {
     SUCCESS_STATUS(200, "SUCCESS"),
 
     RESOURCE_NOT_FOUND(40001, "资源不存在"),
+    PARAM_ERROR(40002, "参数错误"),
     ACCESS_DENY(40003, "权限不足"),
     COMMON_ERROR(50000, "ERROR"),
     ;

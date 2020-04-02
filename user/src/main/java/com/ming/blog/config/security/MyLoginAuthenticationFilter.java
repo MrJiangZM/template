@@ -3,15 +3,11 @@ package com.ming.blog.config.security;
 import com.alibaba.fastjson.JSONObject;
 import com.ming.blog.config.common.CommonException;
 import com.ming.blog.config.common.ResponseStatusEnum;
-import com.ming.blog.dao.UserDao;
-import com.ming.blog.domain.UserDB;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StringUtils;
 
@@ -22,6 +18,10 @@ import java.io.InputStream;
 
 /**
  * 重写内置的登录接口功能
+ * <p>
+ * 主要是兼容使用application/json的格式的登录接口
+ * 获取json中的username和password封装到对应的request中，
+ * 保证在下一个provider是可以在request中获取到
  *
  * @author Jiang Zaiming
  * @date 2020/4/1 9:58 上午
@@ -30,42 +30,26 @@ import java.io.InputStream;
 //@Component
 public class MyLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    @Autowired
-    private UserDao userDao;
-
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         //attempt Authentication when Content-Type is json
         if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
 
-            // use jackson or fastjson to deserialize json
-//            ObjectMapper mapper = new ObjectMapper();
             UsernamePasswordAuthenticationToken authRequest = null;
             try (InputStream ins = request.getInputStream()) {
-//                AuthenticationBean authenticationBean = mapper.readValue(ins,AuthenticationBean.class);
                 AuthenticationBean authenticationBean = JSONObject.parseObject(ins, AuthenticationBean.class);
-
-//                 验证用户名密码信息
-                String username = authenticationBean.getUsername();
-                String password = authenticationBean.getPassword();
-                UserDB userDB = userDao.findByUsername(username);
-                if (userDB == null) {
-                    log.error("cannot get user by username {}", username);
-                    throw new CommonException(ResponseStatusEnum.RESOURCE_NOT_FOUND, "用户名或密码错误");
+                if (authenticationBean == null
+                        || StringUtils.isEmpty(authenticationBean.getUsername())
+                        || StringUtils.isEmpty(authenticationBean.getPassword())) {
+                    log.error("用户名密码不能为空");
+                    throw new CommonException(ResponseStatusEnum.PARAM_ERROR, "用户名密码不能为空");
                 }
-//                if (!new BCryptPasswordEncoder().matches(password, userDB.getPassword())) {
-                if (!userDB.getPassword().equals(password)) {
-                    log.error("cannot get user by username {}", username);
-                    throw new CommonException(ResponseStatusEnum.RESOURCE_NOT_FOUND, "用户名或密码错误");
-                }
-
+                // 把获取的json中的信息封装
                 authRequest = new UsernamePasswordAuthenticationToken(
                         authenticationBean.getUsername(), authenticationBean.getPassword());
             } catch (IOException e) {
-                e.printStackTrace();
-                authRequest = new UsernamePasswordAuthenticationToken(
-                        "", "");
+                log.error("不能正确获取用户名密码");
                 throw new CommonException(ResponseStatusEnum.RESOURCE_NOT_FOUND, "用户名或密码错误");
             }
             setDetails(request, authRequest);
