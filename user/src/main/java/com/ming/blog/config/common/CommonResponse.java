@@ -48,4 +48,10 @@ public class CommonResponse implements Serializable {
         this.message = message == null ? status.getMessage() : message;
     }
 
+    public CommonResponse(ResponseStatusEnum status, String message, Object obj) {
+        this.status = status.getStatus();
+        this.message = message;
+        this.data = obj;
+    }
+
 }

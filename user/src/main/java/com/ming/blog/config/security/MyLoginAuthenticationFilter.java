@@ -49,8 +49,8 @@ public class MyLoginAuthenticationFilter extends UsernamePasswordAuthenticationF
                 authRequest = new UsernamePasswordAuthenticationToken(
                         authenticationBean.getUsername(), authenticationBean.getPassword());
             } catch (IOException e) {
-                log.error("不能正确获取用户名密码");
-                throw new CommonException(ResponseStatusEnum.RESOURCE_NOT_FOUND, "用户名或密码错误");
+                log.error("用户名密码不能为空 error:{}", e);
+                throw new CommonException(ResponseStatusEnum.RESOURCE_NOT_FOUND, "用户名密码不能为空");
             }
             setDetails(request, authRequest);
             return this.getAuthenticationManager().authenticate(authRequest);

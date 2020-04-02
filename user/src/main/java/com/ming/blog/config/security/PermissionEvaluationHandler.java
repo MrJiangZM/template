@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
  * @date 2020/3/31 4:06 下午
  */
 @Slf4j
+@Deprecated
 @Service("permissionEvaluator")
 public class PermissionEvaluationHandler {
 
