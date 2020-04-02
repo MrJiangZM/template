@@ -33,24 +33,17 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-//        UsernamePasswordAuthenticationToken authRequest = null;
-//        try (InputStream ins = request.getInputStream()) {
-////                AuthenticationBean authenticationBean = mapper.readValue(ins,AuthenticationBean.class);
-//            AuthenticationBean authenticationBean = JSONObject.parseObject(ins, AuthenticationBean.class);
-//        } catch (Exception e) {
-//
-//        }
 
-            // 获取表单输入中返回的用户名;
+        // 获取表单输入中返回的用户名;
         String userName = (String) authentication.getPrincipal();
         // 获取表单中输入的密码；
         String password = (String) authentication.getCredentials();
+
         // 这里调用我们的自己写的获取用户的方法；
         SecurityUser userInfo = dbUserDetailService.loadUserByUsername(userName);
         if (userInfo == null) {
             throw new BadCredentialsException("用户名不存在");
         }
-
         // 这里我们还要判断密码是否正确，这里我们的密码使用BCryptPasswordEncoder进行加密的
         if (!userInfo.getPassword().equals(password)) {
             throw new BadCredentialsException("密码不正确");
